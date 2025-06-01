@@ -1,3 +1,5 @@
+package com.example.tasktracker;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -6,6 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +58,8 @@ public class TaskManager {
     }
 
     public void saveTasks() {
+        // If you wanted to add only new entries to the file without overwriting (like a log), you’d do this
+        // new FileWriter(FILE_NAME, true)  // 'true' enables append mode
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             String json = mapper.writeValueAsString(tasks);
             writer.write(json);
@@ -62,6 +67,52 @@ public class TaskManager {
             e.printStackTrace();
         }
     }
+
+    // add tasks
+    public void addTask(Task task){
+        int taskid = tasks.stream().mapToInt(t -> t.getId()).max().orElse(0) + 1;
+        task.setId(taskid); 
+        tasks.add(task);
+        System.out.println("Task added successfully (ID: " + task.getId() + ")");
+    }
+
+    public void updateTask(int id, String newName){
+        Task task = findTask(id).orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found!"));
+        task.updateDescription(newName);
+        System.out.println("Task " + task.getId() + " updated");
+    }
+
+    public void deleteTask(int id){
+        Task task = findTask(id).orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found!"));
+        tasks.remove(task);
+    }
+
+    public void markTask(int id, StatusType status){
+        Task task = findTask(id).orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found!"));
+        task.setStatus(status);
+        System.out.println("Task marked as " + status.name().toLowerCase().replace("_", "-"));
+
+    }
+
+    private void printTask(Task task) {
+        System.out.println("ID: " + task.getId() + " | " + task.getDescription() + " | Status: " + task.getStatus());
+    }
+
+    public void listAll() {
+        tasks.forEach(this::printTask);
+    }
+
+    public void listByStatus(StatusType status) {
+        try {
+            // Task.Status status = Task.Status.valueOf(statusStr.toUpperCase());
+            tasks.stream()
+                 .filter(t -> t.getStatus() == status)
+                 .forEach(this::printTask);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid status: " + status.toString());
+        }
+    }
+
 
 
 }

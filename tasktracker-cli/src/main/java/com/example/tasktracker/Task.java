@@ -1,3 +1,5 @@
+package com.example.tasktracker;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -17,18 +19,18 @@ public class Task {
         // Default constructor needed by Jackson
     }
 
-    public Task(int id, String description, StatusType status, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
+    public Task(String description) {
+        // this.id = id;
         this.description = description;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.status = status.TODO;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and setters
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
@@ -40,8 +42,9 @@ public class Task {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void updateDescription(String description) {
         this.description = description;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public StatusType getStatus() {
@@ -50,6 +53,7 @@ public class Task {
 
     public void setStatus(StatusType status) {
         this.status = status;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public LocalDateTime getCreatedAt() {

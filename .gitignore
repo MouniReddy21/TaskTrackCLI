@@ -1,0 +1,25 @@
+# Maven build artifacts
+tasktracker-cli/target/
+tasktracker-cli/dependency-reduced-pom.xml
+tasktracker-cli/.classpath
+tasktracker-cli/.project
+tasktracker-cli/.settings/
+
+# Runtime files
+tasktracker-cli/tasks.json
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE configurations
+.idea/
+*.iml
+.vscode/
+
+# General backup/swap files
+*~
+*.swp
